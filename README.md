@@ -3,13 +3,13 @@
 
   # 🚀Features
 
-  # User Registration and Login
-  # Food Menu Management
+  * User Registration and Login
+  * Food Menu Management
   * Add, Update, Delete Food Items
   * Food Ordering System
   * Customer Management
   * Database Integration
-  Responsive User Interface
+  * Responsive User Interface
 
   # 🛠️ Technologies Used
   
