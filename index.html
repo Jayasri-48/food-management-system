@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Food Ordering App</title>
+    <style>
+        body {
+            font-family: Arial;
+            background-color: #f5f5f5;
+            text-align: center;
+        }
+        h1 {
+            color: #333;
+        }
+        .container {
+            width: 50%;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+        }
+        input, button {
+            margin: 10px;
+            padding: 10px;
+            width: 80%;
+        }
+        button {
+            background-color: green;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        table {
+            width: 100%;
+            margin-top: 20px;
+        }
+        th, td {
+            padding: 10px;
+            border-bottom: 1px solid #ccc;
+        }
+        .delete-btn {
+            background-color: red;
+        }
+    </style>
+</head>
+
+<body>
+
+<h1>🍔 Food Ordering System</h1>
+
+<div class="container">
+
+    <h3>Add Food Item</h3>
+    <input type="text" id="name" placeholder="Food Name"><br>
+    <input type="number" id="price" placeholder="Price"><br>
+    <input type="text" id="category" placeholder="Category"><br>
+    <button onclick="addFood()">Add Food</button>
+
+    <h3>Food Menu</h3>
+    <button onclick="loadFood()">Load Food</button>
+
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Price</th>
+                <th>Category</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody id="foodTable"></tbody>
+    </table>
+
+</div>
+
+<script>
+
+const baseUrl = "http://localhost:8080/hotel";
+
+// ➕ Add Food
+function addFood() {
+    const food = {
+        name: document.getElementById("name").value,
+        price: document.getElementById("price").value,
+        category: document.getElementById("category").value
+    };
+
+    fetch(baseUrl + "/save", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(food)
+    })
+    .then(res => res.json())
+    .then(data => {
+        alert("Food Added!");
+        loadFood();
+    });
+}
+
+// 📥 Load Food
+function loadFood() {
+    fetch(baseUrl + "/fetchAll")
+    .then(res => res.json())
+    .then(data => {
+        let table = document.getElementById("foodTable");
+        table.innerHTML = "";
+
+        data.forEach(food => {
+            table.innerHTML += `
+                <tr>
+                    <td>${food.id}</td>
+                    <td>${food.name}</td>
+                    <td>${food.price}</td>
+                    <td>${food.category}</td>
+                    <td>
+                        <button class="delete-btn" onclick="deleteFood(${food.id})">
+                            Delete
+                        </button>
+                    </td>
+                </tr>
+            `;
+        });
+    });
+}
+
+// ❌ Delete Food
+function deleteFood(id) {
+    fetch(baseUrl + "/delete/" + id, {
+        method: "DELETE"
+    })
+    .then(() => {
+        alert("Deleted!");
+        loadFood();
+    });
+}
+
+</script>
+
+</body>
+</html>
